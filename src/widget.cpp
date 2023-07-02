@@ -24,11 +24,11 @@ Widget::Widget(QWidget* parent) : QWidget(parent), ui(new Ui::InitWidget) {
 
 	this->load_config();
 	this->effect = new QGraphicsDropShadowEffect(this);
-	this->effect->setBlurRadius(15);
+	this->effect->setBlurRadius(20);
 	this->effect->setOffset(0, 0);
-	this->effect->setColor(QColor(0, 0, 0, 150));
+	this->effect->setColor(QColor(0, 0, 0, 100));
 	this->ui->label->setGraphicsEffect(this->effect);
-	this->ui->label->setFont(QFont("Microsoft JhengHei UI", 28, QFont::Bold));
+	this->ui->label->setFont(QFont("Microsoft JhengHei UI", 28, QFont::Black));
 	this->ui->label->setStyleSheet(QString("QLabel { color : ") + this->text_color + QString("; }"));
 	this->ui->label->setText("Loading...");
 
@@ -66,10 +66,17 @@ void Widget::load_config(void) {
 	this->text_color = "cyan";
 	JSON config = JSON(QFile("./config/config.json"));
 	if (config.get_error().error == QJsonParseError::NoError) {
-		auto raw_text_color = config["text_color"];
-		if (!raw_text_color.isString() && !raw_text_color.isUndefined()) {
-			this->text_color = raw_text_color.toString();
+		auto raw_text_color = config.get("text_color");
+		qDebug() << "config file loaded: " << raw_text_color;
+		if (raw_text_color.isString()) {
+			auto _text_color = raw_text_color.toString();
+			if (!_text_color.isEmpty()) {
+				this->text_color = _text_color;
+			}
 		}
+		qDebug() << "text color: " << this->text_color;
+	} else {
+		qDebug() << "config file not loaded, using default values";
 	}
 }
 
