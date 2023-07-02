@@ -1,7 +1,9 @@
 #include "lyrics.h"
 
 #include <QDebug>
+#include <QDir>
 #include <QMessageBox>
+#include <qjsonvalue.h>
 #include <stdlib.h>
 
 
@@ -29,7 +31,14 @@ LyricsThread::LyricsThread(Widget* widget, App* app)
 	, auth_cli("https://accounts.spotify.com")
 	, lyrics_api_cli("https://spotify-lyric-api.herokuapp.com")
 	, p_widget(widget)
-	, p_app(app) {}
+	, p_app(app) {
+	try {
+		this->lyrics_data = JSON(QFile{"./data/lyrics.json"});
+		qDebug() << "lyrics.json read success";
+	} catch (std::exception& e) {
+		qDebug() << "lyrics.json read error: " << e.what();
+	}
+}
 
 void LyricsThread::run(void) {
 	this->get_auth_verify_code();
@@ -120,6 +129,11 @@ void LyricsThread::get_auth_access_token(void) {
 
 // don't want to implement sp_dc cookies, direct use api from https://github.com/akashrchandran/spotify-lyrics-api
 void LyricsThread::get_lyrics(QString track_id, uint8_t retry) {
+	if (auto key = this->lyrics_data.get(track_id); key != QJsonValue::Undefined) {
+		this->curr_lyrics = this->lyrics_data[track_id].toArray();
+		qDebug() << "get lyrics from cache";
+		return;
+	}
 	if (auto res = lyrics_api_cli.Get("/?trackid=" + track_id.toStdString())) {
 		if (res->status == 200) {
 			qDebug() << QString::fromStdString(res->body);
@@ -137,6 +151,19 @@ void LyricsThread::get_lyrics(QString track_id, uint8_t retry) {
 				}
 				if (no_sync) {
 					this->curr_lyrics = QJsonArray();
+				} else {
+					this->lyrics_data.set(track_id, lyrics);
+					try {
+						if (!QDir("./data").exists()) {
+							QDir().mkdir("./data");
+						}
+						QFile lyrics_file{"./data/lyrics.json"};
+						lyrics_file.open(QIODevice::WriteOnly);
+						lyrics_file.write(this->lyrics_data.to_json().toStdString().c_str());
+						lyrics_file.close();
+					} catch (std::exception& e) {
+						qDebug() << "lyrics.json write fail:" << e.what();
+					}
 				}
 			} else {
 				QJsonDocument doc;
@@ -238,6 +265,7 @@ void LyricsThread::get_playing(uint8_t retry) {
 		}
 	}
 	// else {
-	// 	this->p_widget->SetErrMsgBox("Error", "Fail on getting player status, program will exit (get request failed)");
+	// 	this->p_widget->SetErrMsgBox("Error", "Fail on getting player status, program will exit (get request
+	// failed)");
 	// }
 }

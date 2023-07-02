@@ -23,6 +23,12 @@ Widget::Widget(QWidget* parent) : QWidget(parent), ui(new Ui::InitWidget) {
 	this->setAttribute(Qt::WA_TransparentForMouseEvents);
 
 	this->load_config();
+	this->effect = new QGraphicsDropShadowEffect(this);
+	this->effect->setBlurRadius(15);
+	this->effect->setOffset(0, 0);
+	this->effect->setColor(QColor(0, 0, 0, 150));
+	this->ui->label->setGraphicsEffect(this->effect);
+	this->ui->label->setFont(QFont("Microsoft JhengHei UI", 28, QFont::Bold));
 	this->ui->label->setStyleSheet(QString("QLabel { color : ") + this->text_color + QString("; }"));
 	this->ui->label->setText("Loading...");
 

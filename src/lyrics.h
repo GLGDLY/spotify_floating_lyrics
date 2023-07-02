@@ -27,6 +27,7 @@ private:
 	QJsonArray curr_lyrics;
 	QString last_track_id;
 	QString verify_code = "";
+	JSON lyrics_data;
 
 	void set_msgbox(QString title, QString text);
 	void get_auth_verify_code(void);

@@ -47,4 +47,6 @@ QJsonValue JSON::get(const QString key, const QJsonValue default_value) const {
 	}
 }
 
+void JSON::set(const QString key, const QJsonValue value) { this->json_obj[key] = value; }
+
 QJsonValue JSON::operator[](const QString key) const { return this->get(key); }

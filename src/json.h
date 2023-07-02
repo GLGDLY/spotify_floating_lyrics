@@ -8,6 +8,7 @@
 #include <QJsonParseError>
 #include <QJsonValue>
 #include <qjsondocument.h>
+#include <qjsonvalue.h>
 
 
 class JSON {
@@ -24,6 +25,7 @@ public:
 	QString to_json(void);
 
 	QJsonValue get(const QString key, const QJsonValue default_value = QJsonValue::Undefined) const;
+	void set(const QString key, const QJsonValue value);
 	QJsonValue operator[](const QString key) const;
 
 private:

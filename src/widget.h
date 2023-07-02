@@ -2,9 +2,11 @@
 #define WIDGET_DEF
 
 #include <QFont>
+#include <QGraphicsDropShadowEffect>
 #include <QMouseEvent>
 #include <QPoint>
 #include <QWidget>
+
 
 namespace Ui {
 	class InitWidget;
@@ -25,6 +27,7 @@ private:
 	QPoint last_pos;
 	QString text_color = "cyan";
 	QString msg_box_title, msg_box_text;
+	QGraphicsDropShadowEffect* effect;
 
 	void load_config(void);
 
