@@ -20,6 +20,7 @@ public:
 	~Widget();
 
 	void SetLyricsLabel(const QString text);
+	void SetLyricsSubLabel(const QString text);
 	void SetErrMsgBox(QString title, QString text);
 
 private:

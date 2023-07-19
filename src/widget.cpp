@@ -25,17 +25,23 @@ Widget::Widget(QWidget* parent) : QWidget(parent), ui(new Ui::InitWidget) {
 	this->load_config();
 	this->effect = new QGraphicsDropShadowEffect(this);
 	this->effect->setBlurRadius(20);
-	this->effect->setOffset(0, 0);
+	this->effect->setOffset(1, 1);
 	this->effect->setColor(QColor(0, 0, 0, 100));
 	this->ui->label->setGraphicsEffect(this->effect);
 	this->ui->label->setFont(QFont("Microsoft JhengHei UI", 28, QFont::Black));
 	this->ui->label->setStyleSheet(QString("QLabel { color : ") + this->text_color + QString("; }"));
 	this->ui->label->setText("Loading...");
 
+	this->ui->label_2->setGraphicsEffect(this->effect);
+	this->ui->label_2->setFont(QFont("Microsoft JhengHei UI", 18, QFont::Black));
+	this->ui->label_2->setStyleSheet(QString("QLabel { color : ") + this->text_color + QString("; }"));
+	this->ui->label_2->setText("123");
 
 	QSize screenrect = QGuiApplication::primaryScreen()->size();
-	this->setGeometry(0, 20, screenrect.width() - 10, height() + 20);
-	this->ui->label->setGeometry(10, 20, width() - 20, height() - 40);
+	this->setGeometry(0, 50, screenrect.width() - 10, height());
+	this->ui->label->setGeometry(10, 20, width() - 20, 60);
+	this->ui->label_2->setGeometry(10, 20 + this->ui->label->height(), width() - 20, 30);
+
 
 	connect(this, SIGNAL(err_msg_box_setup_signal()), this, SLOT(load_err_msg_box()));
 }
@@ -92,6 +98,8 @@ void Widget::load_err_msg_box(void) {
 }
 
 void Widget::SetLyricsLabel(const QString text) { this->ui->label->setText(text); }
+
+void Widget::SetLyricsSubLabel(const QString text) { this->ui->label_2->setText(text); }
 
 
 void Widget::SetErrMsgBox(QString title, QString text) {

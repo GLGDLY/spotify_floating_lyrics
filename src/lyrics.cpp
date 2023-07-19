@@ -220,6 +220,7 @@ void LyricsThread::get_playing(uint8_t retry) {
 				}
 				if (this->curr_lyrics.empty()) {
 					this->p_widget->SetLyricsLabel(track_name + "(no lyrics available)");
+					this->p_widget->SetLyricsSubLabel("");
 					qDebug() << "no lyrics available";
 					return;
 				}
@@ -231,6 +232,7 @@ void LyricsThread::get_playing(uint8_t retry) {
 					if (startTimeMs >= curr_ms) {
 						qDebug() << "outputing: " << last_words;
 						this->p_widget->SetLyricsLabel(last_words);
+						this->p_widget->SetLyricsSubLabel("《" + track_name + "》");
 						return;
 					} else {
 						last_words = words;
@@ -241,15 +243,18 @@ void LyricsThread::get_playing(uint8_t retry) {
 					auto item = d["item"].toObject();
 					QString track_name = item["name"].toString();
 					this->p_widget->SetLyricsLabel("《" + track_name + "》");
+					this->p_widget->SetLyricsSubLabel("");
 					qDebug() << "no song playing";
 				} catch (std::exception& e) {
 					qDebug() << "no song playing";
 					this->p_widget->SetLyricsLabel("no song playing");
+					this->p_widget->SetLyricsSubLabel("");
 					return;
 				}
 			}
 		} else if (res->status == 204) {
 			this->p_widget->SetLyricsLabel("no song playing");
+			this->p_widget->SetLyricsSubLabel("");
 			qDebug() << "no song playing";
 			return;
 		} else {
