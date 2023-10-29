@@ -29,7 +29,7 @@ LyricsThread::LyricsThread(Widget* widget, App* app)
 	: open_cli("https://open.spotify.com")
 	, open_api_cli("https://api.spotify.com")
 	, auth_cli("https://accounts.spotify.com")
-	, lyrics_api_cli("https://spotify-lyric-api.herokuapp.com")
+	, lyrics_api_cli("https://spotify-lyric-api-984e7b4face0.herokuapp.com")
 	, p_widget(widget)
 	, p_app(app) {
 	try {
